@@ -1,14 +1,15 @@
 <template>
   <div id="app">
   <header>
-  <template v-if="isAutheniticated">
-    <router-link to='/' class='header-item'>Home</router-link>
-    <span class='header-item' @click='logout'>LogOut</span>
-  </template>
-  <template v-if="!isAutheniticated">
-    <router-link to='/login' class='header-item'>Login</router-link>
-    <router-link to='/signup' class='header-item'>Signup</router-link>
-  </template>
+   <v-app-bar color="gray accent-4" dark app>
+        <template v-if="isAutheniticated">
+          <span class='header-item' @click='logout'>ログアウト</span>
+        </template>
+        <template v-if="!isAutheniticated">
+          <router-link to='/login' class='header-item'>Login</router-link>
+          <router-link to='/signup' class='header-item'>Signup</router-link>
+        </template>
+  </v-app-bar>
   </header>
     <router-view/>
   </div>

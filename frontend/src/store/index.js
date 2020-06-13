@@ -104,6 +104,22 @@ export default new Vuex.Store({
                     refreshToken : response.data.refreshToken
                 }).then(response => {
                     console.log(response);
+                    axios.post(
+                        `https://firestore.googleapis.com/v1/projects/umedandon/databases/(default)/documents/user?documentId=${response.localId}`,
+                        {
+                            fields: {
+                                name: {stringValue: authData.displayName},
+                                userId: {stringValue: response.localId},
+                                // clear : { mapValue: { "clear" : { stringValue: "hello" }}}
+                            }
+                        },{
+                            headers: {
+                              Authorization: `Bearer ${response.idToken}`
+                            }
+                          }
+                    ).then(response => {
+                        console.log(response);
+                    })
                 })
                 router.push('/');
             })
@@ -119,7 +135,7 @@ export default new Vuex.Store({
             setTimeout(() => {
                 dispatch('refreshIdToken', authData.refreshToken)
             }, authData.expiresIn * 1000)
-            return authData.localId;
+            return {localId: authData.localId, idToken: authData.idToken};
         },
         logout({ commit }){
             commit('updateIdToken', null);
@@ -127,6 +143,8 @@ export default new Vuex.Store({
             localStorage.removeItem('expiryTimeMs');
             localStorage.removeItem('refreshIdToken');
             router.replace('/login');
+            
         },
+        
     }
 })
